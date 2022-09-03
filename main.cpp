@@ -295,6 +295,36 @@ void COPY_DIRECTORY(string src_path, string dest_dir_path)
     closedir(dir1);
 }
 
+void DELETE_FILE(string file_path)
+{
+    remove(file_path.c_str());
+}
+
+void DELETE_DIRECTORY(string dir_path)
+{
+    // bas itna kar do jindagi me aish hi aish
+    DIR *dir1;
+    struct dirent *ent1;
+    dir1 = opendir(dir_path.c_str());
+    while ((ent1 = readdir(dir1)) != NULL)
+    {
+        string curr = ent1->d_name;
+
+        if (curr == "." || curr == "..") // bhery bhery important line
+            continue;
+
+        string temp = dir_path + "/" + curr;
+        struct stat check2;
+        stat(temp.c_str(), &check2);
+        if (check2.st_mode & S_IFDIR)
+            DELETE_DIRECTORY(temp);
+        else
+            DELETE_FILE(temp);
+    }
+    closedir(dir1);
+    rmdir(dir_path.c_str());
+}
+
 void START_COMMAND_MODE()
 {
 
@@ -456,10 +486,18 @@ void START_COMMAND_MODE()
                 vector<string> v;
                 tokenize(command, v, ' ');
                 string file_path = curr_dir + "/" + v[1];
-                remove(file_path.c_str());
+                DELETE_FILE(file_path);
+                cout << "Deleted File Successfully";
+                command = "";
             }
             else if (temp == "delete_dir")
             {
+                vector<string> v;
+                tokenize(command, v, ' ');
+                string dir_path = curr_dir + "/" + v[1];
+                DELETE_DIRECTORY(dir_path);
+                cout << "Deleted Directory Successfully";
+                command = "";
             }
             else // invalid command
             {
@@ -726,4 +764,3 @@ int main()
 
     return 0;
 }
-// Left - delete directory
