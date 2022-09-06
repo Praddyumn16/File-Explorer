@@ -364,6 +364,7 @@ void START_COMMAND_MODE()
                         path += a;
                 }
                 path = path.substr(1);
+                path = rel_to_absolute(path);
                 dir = opendir(path.c_str());
                 command = "";
                 if (dir == NULL)
@@ -417,6 +418,9 @@ void START_COMMAND_MODE()
                     }
                 }
                 command = "";
+                GET_FILES(curr_dir);
+                int n = files_and_dirs.size();
+                PRINT_K_FILES_WITH_METADATA_CMD(1, 1, min(K, n), 1, n);
             }
             else if (temp == "move")
             {
@@ -434,13 +438,21 @@ void START_COMMAND_MODE()
                     string temp_dest_path = destination_path + "/" + v[i];
                     MOVE(original_path, temp_dest_path);
                 }
-
                 command = "";
+                GET_FILES(curr_dir);
+                int n = files_and_dirs.size();
+                PRINT_K_FILES_WITH_METADATA_CMD(1, 1, min(K, n), 1, n);
             }
             else if (temp == "rename")
             {
                 vector<string> v;
                 tokenize(command, v, ' ');
+                if (v.size() != 2)
+                {
+                    cout << "Invalid command syntax";
+                    command = "";
+                    continue;
+                }
                 string original_path = curr_dir + "/" + v[1], new_path = curr_dir + "/" + v[2];
 
                 char *c = const_cast<char *>(original_path.c_str());
@@ -450,6 +462,9 @@ void START_COMMAND_MODE()
                 else
                     cout << "Renamed successfully";
                 command = "";
+                GET_FILES(curr_dir);
+                int n = files_and_dirs.size();
+                PRINT_K_FILES_WITH_METADATA_CMD(1, 1, min(K, n), 1, n);
             }
             else if (temp == "create_file")
             {
@@ -465,6 +480,9 @@ void START_COMMAND_MODE()
                     int status = open(dir_path.c_str(), O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
                 }
                 command = "";
+                GET_FILES(curr_dir);
+                int n = files_and_dirs.size();
+                PRINT_K_FILES_WITH_METADATA_CMD(1, 1, min(K, n), 1, n);
             }
             else if (temp == "create_dir")
             {
@@ -479,24 +497,45 @@ void START_COMMAND_MODE()
                     dir_path += v[1];
                     int status = mkdir(dir_path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
                 }
+                GET_FILES(curr_dir);
+                int n = files_and_dirs.size();
+                PRINT_K_FILES_WITH_METADATA_CMD(1, 1, min(K, n), 1, n);
                 command = "";
             }
             else if (temp == "delete_file")
             {
                 vector<string> v;
                 tokenize(command, v, ' ');
+                if (v.size() != 2)
+                {
+                    cout << "Invalid command syntax";
+                    command = "";
+                    continue;
+                }
                 string file_path = curr_dir + "/" + v[1];
                 DELETE_FILE(file_path);
                 cout << "Deleted File Successfully";
+                GET_FILES(curr_dir);
+                int n = files_and_dirs.size();
+                PRINT_K_FILES_WITH_METADATA_CMD(1, 1, min(K, n), 1, n);
                 command = "";
             }
             else if (temp == "delete_dir")
             {
                 vector<string> v;
                 tokenize(command, v, ' ');
+                if (v.size() != 2)
+                {
+                    cout << "Invalid command syntax";
+                    command = "";
+                    continue;
+                }
                 string dir_path = curr_dir + "/" + v[1];
                 DELETE_DIRECTORY(dir_path);
                 cout << "Deleted Directory Successfully";
+                GET_FILES(curr_dir);
+                int n = files_and_dirs.size();
+                PRINT_K_FILES_WITH_METADATA_CMD(1, 1, min(K, n), 1, n);
                 command = "";
             }
             else // invalid command
@@ -548,6 +587,9 @@ void ENABLE_SCROLLING(int curr, int start, int end, int list_start, int list_end
         }
         else if (c == 127) // backspace
         {
+            lft.push(curr_dir);
+            rgt = stack<string>();
+
             CURSOR_TRACKER = 1;
             int count = 0;
             for (auto a : curr_dir)
