@@ -1,9 +1,12 @@
-# Linux Based File Explorer
+# Linux Terminal Based File Explorer
 
 This is a fully functional File Explorer Application that runs on Linux machines with a restricted feature set. </br>
+Prerequisite - GCC/G++ compiler needs to be pre-installed. </br>
 Download the source code and run the following commands to start the application: 
-1. g++ main.cpp (Assuming you have the g++ compiler pre-installed)
-2. ./a.out
+```
+g++ main.cpp 
+./a.out
+```
 
 ##
 
