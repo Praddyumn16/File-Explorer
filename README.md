@@ -1,17 +1,20 @@
-This is a fully functional File Explorer Application, with a restricted feature set. Run the application in Full screen terminal.
+# Linux Based File Explorer
+
+This is a fully functional File Explorer Application that runs on Linux machines with a restricted feature set.
 
 ##
 
-It works in two modes :
+<b>It works in two modes :</b>
 ### 1. Normal mode (default mode) 
-used to explore the current directory and navigate the filesystem.
+Navigate the filesystem by arrow/backspace/enter keys.
 ### 2. Command mode 
-used to enter shell commands.
+Perform operations and navigate via entering shell commands.
 
 ##
 
 **Detailed features of the Normal mode:**
-- Get the details listed of all the files/folders in the current directory. 
+- Get the details(file name/file size/owner/last modified) listed of all the files/folders in the current directory. 
+- '.' represents current directory and '..' represents parent directory
 - Navigate via up and down arrow keys.  
 - User can go back to the previously visited directory or the next directory via left and right arrow keys.
 - Go one level up to the parent directory using Backspace.
@@ -19,11 +22,14 @@ used to enter shell commands.
 - Enter command mode by pressing colon i.e. ':'
 
 **Various commands of the Command mode:**
-- copy , move , rename , create file/directory , delete file/directory , goto , search 
+- goto, create file/directory, delete file/directory, copy, move, rename, search 
 - Go back to normal mode by pressing 'Esc' key.
-
-##
 
 **Closing Application:**
 - Normal mode: 'q' key
 - Command mode: 'quit' command
+
+## Working demo:
+
+[Screencast from 27-12-22 02:39:48 AM IST.webm](https://user-images.githubusercontent.com/53634655/209583657-bad23c19-aab8-4330-bae9-46f7cba9d9c3.webm)
+
